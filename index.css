@@ -6,3 +6,13 @@ body {
   max-width: 75ch;
   margin: auto;
 }
+
+h1 {
+  margin-block: 3rem;
+}
+
+.screen {
+  display: block;
+  max-height: 80dvh;
+  margin-inline-start: 4rem;
+}
