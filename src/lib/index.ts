@@ -15,25 +15,55 @@ type Month = {
   end: Date
 }
 
+type Bounds = {
+  start: number
+  end: number
+}
+type Delta = {
+  day: Bounds
+  month: Bounds
+}
+
+
+export const offsets = ({ month, date }) => {
+  const times = ['start', 'end'] as const
+  return {
+    day: Object.fromEntries(
+      times.map((pos) => [pos, month[pos].getDate() - date.getDate()])
+    ) as Bounds,
+    month: Object.fromEntries(
+      times.map((pos) => [pos, month[pos].getMonth() - date.getMonth()])
+    ) as Bounds,
+  }
+
+}
+
 export const GregorianConversion = (
-  (date: Date, months: Array<Month>, negative = true) => {
-    const [sign, ...more] = months.filter((prev: Month, idx: number) => {
-      const next = months[(idx + 1) % months.length]
+  (
+    { date, months, yearZero = 2029 }:
+    { date: Date, months: Array<Month>, yearZero?: number }
+  ) => {
+    console.debug({ date, months, yearZero })
+    const [sign, ...more] = months.filter((month: Month, idx: number) => {
+      const Δ = offsets({ month, date })
       return (
-        prev.start.getDate() <= date.getDate()
-        && prev.start.getMonth() <= date.getMonth()
-        && next.start.getDate() >= date.getDate()
-        && next.start.getMonth() >= date.getMonth()
+        (Δ.month.start === 0 && Δ.day.start <= 0)
+        || (Δ.month.start === -1 && Δ.day.start >= 0)
       )
     })
 
+    if(!sign) {
+      throw new Error('Couldn’t find a sign.')
+    }
     if(more.length > 0) {
       console.error({ date, sign, more })
       throw new Error('Returned too many months.')
     }
 
-    const day = sign.start.getDate()
-    const year = date.getFullYear()
-    return `${year}⁄${sign.symbol}⁄${day}`
+    const Δ = offsets({ month: sign, date })
+    console.debug({ date, sign, Δ })
+
+    const year = date.getFullYear() - yearZero + 1
+    return `${year}⁄${sign.symbol}⁄${Δ.day[year >= 0 ? 'start' : 'end']}`
   }
 )

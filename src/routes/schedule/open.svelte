@@ -1,4 +1,9 @@
-<svg version="1.1" viewBox="0 0 2200 1300" xmlns="http://www.w3.org/2000/svg">
+<svg
+  width="100%" height="100%"
+  version="1.1"
+  viewBox="0 0 2200 1300"
+  xmlns="http://www.w3.org/2000/svg"
+>
   <title>Swingin’ Open Sign</title>
   <defs><style>
     :root {
@@ -11,7 +16,7 @@
       translate: 50px -725px;
       transform-box: fill-box;
       transform-origin: 50% 4%;
-      animation: swing 3s infinite reverse ease-in-out;
+      animation: swing var(--swing, 3s) infinite reverse ease-in-out;
     }
     .shadow {
       fill: #9999;
@@ -54,7 +59,11 @@
       to { filter: hue-rotate:(90deg); }
     }
   </style></defs>
-  <g id="root">
+  <g
+    id="root"
+    style:--swing="{3 + (Math.random() - 0.5) * 2}s"
+    style:--arc="{30 + (Math.random() - 0.5) * 8}deg"
+  >
     <path class="shadow" transform="matrix(.13333 0 0 -.13333 0 2666.7)" d="m12475 6714.7v-203.6c0-313.2-257.8-588.5-571.5-569.5l-4046.6 243.9-4046.1-243.9c-313.84-17.4-571.56 256.2-571.56 569.5v203.6h9235.8"/>
     <path class="shadow" transform="matrix(.13333 0 0 -.13333 0 2666.7)" d="m8073.2 13618 2214.4-2451.4h-136.7l-2132.3 2360.4c-44 48.7-103.01 72.7-162.59 72-59.82-0.7-119.61-26.2-164.89-76.3l-2128.4-2356.1h-136.69l2210.5 2447c60.84 67.4 140.09 101.6 218.75 102.5 78.87 0.9 157.83-31.8 217.81-98.1"/>
     <path class="highlight" transform="matrix(.13333 0 0 -.13333 0 2666.7)" d="m8144 13940c158.61-158.6 158.61-415.7 0-574.3-158.6-158.7-415.75-158.7-574.36 0-158.61 158.6-158.6 415.7 0 574.3 158.61 158.6 415.76 158.6 574.36 0"/>

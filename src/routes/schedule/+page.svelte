@@ -1,5 +1,7 @@
 <script lang="ts">
   import { GregorianConversion } from '$lib'
+  import { page } from '$app/state'
+  import OpenSign from './open.svelte'
 
   const periods = [0.37, 0.31, 0.29, 0.23]
   const num = {
@@ -9,6 +11,12 @@
     },
   }
   let selector = $state<HTMLElement>()
+  console.debug({ page })
+  const startParam = page.url.searchParams.get('start')
+  const start = (
+    startParam ? new Date(startParam) : new Date()
+  )
+  console.debug({ start })
 
   const clearSelection = () => {
     document.querySelectorAll('.selected').forEach((sel) => (
@@ -111,8 +119,8 @@
         if(elem instanceof HTMLInputElement && elem.checked) {
           const { periodIdx, slotIdx } = elem.dataset
           return {
-            period: Number(periodIdx),
-            slot: Number(slotIdx),
+            period: Number(elem.dataset.period),
+            slot: Number(elem.dataset.slotIdx),
           }
         }
       }).filter(Boolean)
@@ -137,9 +145,16 @@
           {#if p < num.days - 1 || d === 0}
             <li><span>
               {#if d === 0}
-                {GregorianConversion(new Date(), months)}
+                {GregorianConversion({
+                  date: (() => {
+                    const newDate = new Date(start)
+                    newDate.setDate(newDate.getDate() + p)
+                    return newDate
+                  })(),
+                  months,
+                })}
               {:else}
-                {d * 10}%
+                {d * 10}ʜ͋
               {/if}
             </span></li>
           {/if}
@@ -155,14 +170,17 @@
               <li>
                 <label for="entry-{i}-{j}"><section>
                   <input
+                    id="entry-{i}-{j}"
                     type="checkbox"
                     value={i * periods.length + j}
-                    data-period-idx={i}
+                    data-period={period}
                     data-slot-idx={j}
                   />
                   <h2 class="percent">
-                    {(period * 100).toFixed(0)}%:
-                    <img src="open.svg" alt="open"/>
+                    <span class="text">
+                      {(period * 100).toFixed(0)}ʜ͋
+                    </span>
+                    <OpenSign/>
                   </h2>
                 </section></label>
               </li>
@@ -283,21 +301,20 @@
       align-items: center;
       cursor: pointer;
     }
+  }
 
-    .percent {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  .percent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 100%;
+    .text::after {
+      content: ': ';
     }
   }
 
   input[type="checkbox"] {
     display: none;
-  }
-  img[src="open.svg"] {
-    height: 6rem;
-    margin-inline: auto;
-    display: inline-block;
   }
   h2 {
     display: block;
@@ -310,5 +327,27 @@
   :global(#selector) {
     position: absolute;
     border: var(--line, 5px) dotted currentColor;
+  }
+
+  @media(width < 900px) {
+    .percent {
+      flex-direction: column;
+
+      .text::after {
+        content: '';
+      }
+    }
+  }
+
+  @media(width < 500px) {
+    #marks li {
+      margin-inline-end: -0.5rem;
+    }
+    aside {
+      gap: 0.5rem;
+    }
+    .percent {
+      font-size: 17pt;
+    }
   }
 </style>
