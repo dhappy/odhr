@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { GregorianConversion } from "$lib";
+  import { GregorianConversion } from '$lib'
 
   const periods = [0.37, 0.31, 0.29, 0.23]
   const num = {
@@ -9,6 +9,40 @@
     },
   }
   let selector = $state<HTMLElement>()
+
+  const clearSelection = () => {
+    document.querySelectorAll('.selected').forEach((sel) => (
+      (sel as HTMLElement).classList.remove('selected')
+    ))
+  }
+  const select = () => {
+    const bbox = selector?.getBoundingClientRect()
+    if(bbox) {
+      const slots = document.querySelectorAll('.slots li')
+      const rects = (
+        Array.from(slots).map((slot) => slot.getBoundingClientRect())
+      )
+      const touched = (
+        rects.map((r, i) => {
+          if(
+            bbox.y <= r.y + r.height / 2
+            && bbox.y + bbox.height >= r.y + r.height / 2
+            && bbox.x <= r.x + r.width / 2
+            && bbox.x + bbox.width >= r.x + r.width / 2
+          ) {
+            return slots[i]
+          }
+        })
+        .filter(Boolean)
+      )
+
+      clearSelection()
+      touched.forEach((t, i) => {
+        t?.classList.add('selected')
+      })
+      return touched
+    }
+  }
 
   $effect(() => {
     if(!selector) throw new Error('`selector` is not set.')
@@ -40,6 +74,8 @@
       selector.style.top = `${Math.min(y, start.y)}px`
       selector.style.width = `${Math.abs(x - start.x)}px`
       selector.style.height = `${Math.abs(y - start.y)}px`
+
+      select()
     })
 
 
@@ -47,64 +83,102 @@
       if(!selector) throw new Error('`selector` is not set.')
       selector.style.borderColor = 'transparent'
       start = null
-      const bbox = selector.getBoundingClientRect()
-      console.debug({ bbox, e: document.querySelectorAll(':checked') })
-
-      evt.target?.dispatchEvent(new PointerEvent('click'))
+      const active = select()
+      ;(
+        active
+        ?.map((act) => act?.querySelector('[type="checkbox"]'))
+        .forEach((elem) => {
+          if(elem instanceof HTMLInputElement) {
+            elem.checked = true
+          } else {
+            console.warn({ 'Unrecognized Slot': elem })
+          }
+        })
+      )
     })
   })
 
   const { data } = $props()
   const { months } = data
+
+  const submit = (evt: SubmitEvent) => {
+    evt.preventDefault()
+
+    const slots = (
+      Array.from(
+        (evt.target as HTMLFormElement).elements
+      ).map((elem) => {
+        if(elem instanceof HTMLInputElement && elem.checked) {
+          const { periodIdx, slotIdx } = elem.dataset
+          return {
+            period: Number(periodIdx),
+            slot: Number(slotIdx),
+          }
+        }
+      }).filter(Boolean)
+    )
+    console.debug({ slots })
+  }
 </script>
 
 <svelte:head>
   <title>Óð: Scheduling</title>
 </svelte:head>
 
-<form style:--percents={num.percents} action="apply/">
-  <ul id="marks">
-    {#each Array.from({ length: num.days + 1 }) as _p, p}
-      {#each Array.from({ length: 10 }) as _d, d}
-        {#if p < num.days - 1 || d === 0}
-          <li><span>
-            {#if d === 0}
-              {GregorianConversion(new Date(), months)}
-            {:else}
-              {d * 10}%
-            {/if}
-          </span></li>
-        {/if}
+<form
+  style:--percents={num.percents}
+  onsubmit={submit}
+>
+  <button id="apply">Apply</button>
+  <aside>
+    <ul id="marks">
+      {#each Array.from({ length: num.days }) as _p, p}
+        {#each Array.from({ length: 10 }) as _d, d}
+          {#if p < num.days - 1 || d === 0}
+            <li><span>
+              {#if d === 0}
+                {GregorianConversion(new Date(), months)}
+              {:else}
+                {d * 10}%
+              {/if}
+            </span></li>
+          {/if}
+        {/each}
       {/each}
-    {/each}
-  </ul>
-  <ul id="periods">
-    {#each periods as period, i}
-      {@const length = Math.floor(num.percents / (period * 100))}
-      <li>
-        <ol class="slots" style:--slot-height={period}>
-          {#each Array.from({ length }) as _j, j}
-            <li>
-              <label for="entry-{i}-{j}"><section>
-                <input id="entry-{i}-{j}" type="checkbox" value="period:{i}-slot:{j}"/>
-                <h2 class="percent">
-                  {(period * 100).toFixed(0)}%:
-                  <img src="open.svg" alt="open"/>
-                </h2>
-                <h2>Apply</h2>
-              </section></label>
-            </li>
-          {/each}
-        </ol>
-      </li>
-    {/each}
-  </ul>
+    </ul>
+    <ul id="periods">
+      {#each periods as period, i}
+        {@const length = Math.floor(num.percents / (period * 100))}
+        <li>
+          <ol class="slots" style:--slot-height={period + 0.02}>
+            {#each Array.from({ length }) as _j, j}
+              <li>
+                <label for="entry-{i}-{j}"><section>
+                  <input
+                    type="checkbox"
+                    value={i * periods.length + j}
+                    data-period-idx={i}
+                    data-slot-idx={j}
+                  />
+                  <h2 class="percent">
+                    {(period * 100).toFixed(0)}%:
+                    <img src="open.svg" alt="open"/>
+                  </h2>
+                </section></label>
+              </li>
+            {/each}
+          </ol>
+        </li>
+      {/each}
+    </ul>
+  </aside>
 </form>
 <div id="selector" bind:this={selector}></div>
 
 <style>
   :root {
     --line: 6px;
+    --border: 5px;
   }
   ul, ol {
     list-style: none;
@@ -116,19 +190,43 @@
   }
   form {
     margin-block: 5rem;
+  }
+  aside {
     display: grid;
-    grid-template-columns: 4em repeat(4, 1fr);
+    grid-template-columns: 6em repeat(4, 1fr);
     gap: 2rem;
+  }
+
+  #apply {
+    font-size: 30pt;
+    padding: 1rem;
+    display: inline-block;
+    margin-inline: auto;
+    position: sticky;
+    top: 5%;
+    left: 50%;
+    border-radius: 2rem;
+    background-color: #BA45AD;
+    transition: background-color 0.5s;
+    z-index: 100;
+  }
+  #apply:hover, #apply:focus {
+    background-color: orangered;
+  }
+
+  #marks {
+    margin-top: calc(-0.5rem - var(--line));
   }
 
   #marks li {
     border: var(--line) dashed #5559;
     border-inline-start: none;
     gap: 0;
-    height: calc(var(--line) * 10);
+    height: calc(var(--line) * 9.25);
     margin-top: calc(-1 * var(--line));
     margin-inline-end: -2rem;
     font-size: 18pt;
+    user-select: none;
     & span {
       display: block;
       margin-block-start: calc(-1 * 2 * 18pt / 3);
@@ -149,14 +247,17 @@
         border: var(--line) solid #5559;
       }
     }
-    li li:hover, li li:has(input:checked) {
+    li li:hover, li li:has(input:checked), :global(.selected) {
       filter: saturate(10) hue-rotate(90deg);
     }
+    & > li {
+      border: var(--border) solid currentColor;
+    }
     & > li:first-child {
-      border: 5px solid #30F7;
+      border-color: #30F7;
     }
     & > li:not(:first-child) {
-      border: 5px solid #F047;
+      border-color: #F047;
     }
     & > li:nth-child(1) {
       grid-column: 2 / span 1;
@@ -194,7 +295,7 @@
     display: none;
   }
   img[src="open.svg"] {
-    height: 4rem;
+    height: 6rem;
     margin-inline: auto;
     display: inline-block;
   }
