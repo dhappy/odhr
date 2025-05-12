@@ -1,0 +1,80 @@
+[
+  {
+    symbol: '♋',
+    name: 'Cancer',
+    start: '1⁄21',
+    end: '2⁄9',
+  },
+  {
+    symbol: '♌',
+    name: 'Leo',
+    start: '2⁄10',
+    end: '3⁄15',
+  },
+  {
+    symbol: '♍',
+    name: 'Virgo',
+    start: '3⁄16',
+    end: '4⁄30',
+  },
+  {
+    symbol: '♎',
+    name: 'Libra',
+    start: '5⁄1',
+    end: '5⁄22',
+  },
+  {
+    symbol: '♏',
+    name: 'Scorpio',
+    start: '5⁄23',
+    end: '5⁄29',
+  },
+  {
+    symbol: '⛎',
+    name: 'Ophiuchus',
+    start: '5⁄30',
+    end: '6⁄17',
+  },
+  {
+    symbol: '♐',
+    name: 'Sagittarius',
+    start: '6⁄18',
+    end: '7⁄18',
+  },
+  {
+    symbol: '♑',
+    name: 'Capricorn',
+    start: '7⁄19',
+    end: '8⁄15',
+  },
+  {
+    symbol: '♒',
+    name: 'Aquarius',
+    start: '8⁄16',
+    end: '9⁄11',
+  },
+  {
+    symbol: '♓',
+    name: 'Pisces',
+    start: '9⁄12',
+    end: '10⁄18',
+  },
+  {
+    symbol: '♈',
+    name: 'Aries',
+    start: '10⁄19',
+    end: '–11⁄13',
+  },
+  {
+    symbol: '♉',
+    name: 'Taurus',
+    start: '11⁄14',
+    end: '–12⁄19',
+  },
+  {
+    symbol: '♊',
+    name: 'Gemini',
+    start: '12⁄2',
+    end: '–1⁄20',
+  },
+]
