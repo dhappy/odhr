@@ -9,6 +9,7 @@
     "npm:eslint-plugin-svelte@3": "3.1.0_eslint@9.25.0_svelte@5.23.0__acorn@8.14.1_postcss@8.5.3",
     "npm:eslint@^9.18.0": "9.25.0",
     "npm:globals@16": "16.0.0",
+    "npm:json5@^2.2.3": "2.2.3",
     "npm:svelte-check@4": "4.1.5_svelte@5.23.0__acorn@8.14.1_typescript@5.8.3",
     "npm:svelte@5": "5.23.0_acorn@8.14.1",
     "npm:typescript-eslint@^8.20.0": "8.30.1_eslint@9.25.0_typescript@5.8.3_@typescript-eslint+parser@8.30.1__eslint@9.25.0__typescript@5.8.3",
@@ -824,6 +825,9 @@
     "json-stable-stringify-without-jsonify@1.0.1": {
       "integrity": "sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw=="
     },
+    "json5@2.2.3": {
+      "integrity": "sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg=="
+    },
     "keyv@4.5.4": {
       "integrity": "sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==",
       "dependencies": [
@@ -1213,6 +1217,7 @@
         "npm:eslint-plugin-svelte@3",
         "npm:eslint@^9.18.0",
         "npm:globals@16",
+        "npm:json5@^2.2.3",
         "npm:svelte-check@4",
         "npm:svelte@5",
         "npm:typescript-eslint@^8.20.0",
