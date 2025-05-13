@@ -50,6 +50,11 @@
       fill: cyan;
       animation: splurt 3s infinite reverse linear;
     }
+    @media (prefers-reduced-motion) {
+      #root {
+        animation: none;
+      }
+    }
     @keyframes swing {
       0%, 100% { rotate: calc(-1 * var(--arc, 45deg)); }
       50% { rotate: var(--arc, 45deg); }

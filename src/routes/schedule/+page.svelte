@@ -196,6 +196,9 @@
 <div id="selector" bind:this={selector}></div>
 
 <style>
+  @keyframes stop {
+    from, to { rotate: 0; }
+  }
   :root {
     --line: 6px;
     --border: 5px;
@@ -265,10 +268,24 @@
       margin-top: calc(-1 * var(--line) * 3);
       li {
         border: var(--line) solid #5559;
+
+        &:hover {
+          filter: saturate(10) hue-rotate(90deg);
+        }
+        &:has(input:checked) {
+          filter: saturate(15) hue-rotate(180deg);
+        }
+        :global(.selected) {
+          filter: saturate(7.5) hue-rotate(270deg);
+        }
+        :is(
+          &:hover,
+          &:has(input:checked),
+          :global(.selected)
+        ) :global(svg #root) {
+          animation-name: stop;
+        }
       }
-    }
-    li li:hover, li li:has(input:checked), :global(.selected) {
-      filter: saturate(10) hue-rotate(90deg);
     }
     & > li {
       border: var(--border) solid currentColor;
@@ -310,7 +327,8 @@
     justify-content: center;
     align-items: center;
     max-height: 100%;
-    .text::after {
+
+    & .text::after {
       content: ': ';
     }
   }
