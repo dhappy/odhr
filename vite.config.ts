@@ -1,6 +1,12 @@
-import { sveltekit } from '@sveltejs/kit/vite'
 import { defineConfig } from 'vite'
+import deno from '@deno/vite-plugin'
+import { sveltekit } from '@sveltejs/kit/vite'
+import devtoolsJSON from 'vite-plugin-devtools-json'
 
 export default defineConfig({
-	plugins: [sveltekit()]
+	plugins: [
+		deno(),
+		sveltekit(),
+		devtoolsJSON(),
+	],
 })

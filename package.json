@@ -14,7 +14,9 @@
 		"gh:publish": "gh-pages --message '¡Pushin’ it real good! 🎗️' --dist build/ --nojekyll"
 	},
 	"dependencies": {
-		"json5": "^2.2.3"
+		"@deno/vite-plugin": "^1.0.4",
+		"json5": "^2.2.3",
+		"vite-plugin-devtools-json": "^0.1.0"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",

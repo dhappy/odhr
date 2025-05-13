@@ -1,6 +1,7 @@
 {
   "version": "4",
   "specifiers": {
+    "npm:@deno/vite-plugin@^1.0.4": "1.0.4_vite@6.3.2__picomatch@4.0.2",
     "npm:@eslint/compat@^1.2.5": "1.2.9_eslint@9.25.0",
     "npm:@eslint/js@^9.18.0": "9.25.0",
     "npm:@sveltejs/adapter-static@^3.0.8": "3.0.8_@sveltejs+kit@2.19.0__@sveltejs+vite-plugin-svelte@5.0.3___svelte@5.23.0____acorn@8.14.1___vite@6.3.2____picomatch@4.0.2__svelte@5.23.0___acorn@8.14.1__vite@6.3.2___picomatch@4.0.2_@sveltejs+vite-plugin-svelte@5.0.3__svelte@5.23.0___acorn@8.14.1__vite@6.3.2___picomatch@4.0.2_svelte@5.23.0__acorn@8.14.1_vite@6.3.2__picomatch@4.0.2",
@@ -15,6 +16,7 @@
     "npm:svelte@5": "5.23.0_acorn@8.14.1",
     "npm:typescript-eslint@^8.20.0": "8.30.1_eslint@9.25.0_typescript@5.8.3_@typescript-eslint+parser@8.30.1__eslint@9.25.0__typescript@5.8.3",
     "npm:typescript@5": "5.8.3",
+    "npm:vite-plugin-devtools-json@0.1": "0.1.0_vite@6.3.2__picomatch@4.0.2",
     "npm:vite@^6.2.6": "6.3.2_picomatch@4.0.2"
   },
   "npm": {
@@ -23,6 +25,12 @@
       "dependencies": [
         "@jridgewell/gen-mapping",
         "@jridgewell/trace-mapping"
+      ]
+    },
+    "@deno/vite-plugin@1.0.4_vite@6.3.2__picomatch@4.0.2": {
+      "integrity": "sha512-xg8YT8Wn2sGXSnJgiGTpBGX1Dov0c6fd1rAp8VsfrCUtyBRRWzwVMAnd3fQ4yq8h7LSVvJUxEFN4U421k/DQLA==",
+      "dependencies": [
+        "vite"
       ]
     },
     "@esbuild/aix-ppc64@0.25.2": {
@@ -1318,6 +1326,16 @@
     "util-deprecate@1.0.2": {
       "integrity": "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw=="
     },
+    "uuid@11.1.0": {
+      "integrity": "sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A=="
+    },
+    "vite-plugin-devtools-json@0.1.0_vite@6.3.2__picomatch@4.0.2": {
+      "integrity": "sha512-KvdgPBUAAhwnpOgXmJhs6KI4/IPn6xUppLGm20D0Uvp/doZ9TpTYYfzSHX0TgvdsSlTAwzZfzDse+ujGskp68g==",
+      "dependencies": [
+        "uuid",
+        "vite"
+      ]
+    },
     "vite@6.3.2_picomatch@4.0.2": {
       "integrity": "sha512-ZSvGOXKGceizRQIZSz7TGJ0pS3QLlVY/9hwxVh17W3re67je1RKYzFHivZ/t0tubU78Vkyb9WnHPENSBCzbckg==",
       "dependencies": [
@@ -1358,6 +1376,7 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
+        "npm:@deno/vite-plugin@^1.0.4",
         "npm:@eslint/compat@^1.2.5",
         "npm:@eslint/js@^9.18.0",
         "npm:@sveltejs/adapter-static@^3.0.8",
@@ -1372,6 +1391,7 @@
         "npm:svelte@5",
         "npm:typescript-eslint@^8.20.0",
         "npm:typescript@5",
+        "npm:vite-plugin-devtools-json@0.1",
         "npm:vite@^6.2.6"
       ]
     }

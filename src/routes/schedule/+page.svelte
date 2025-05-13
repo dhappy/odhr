@@ -11,12 +11,14 @@
     },
   }
   let selector = $state<HTMLElement>()
-  console.debug({ page })
-  const startParam = page.url.searchParams.get('start')
-  const start = (
-    startParam ? new Date(startParam) : new Date()
-  )
-  console.debug({ start })
+
+  let start = $state(new Date())
+  $effect(() => {
+    const startParam = page.url.searchParams.get('start')
+    start = (
+      startParam ? new Date(startParam) : new Date()
+    )
+  })
 
   const clearSelection = () => {
     document.querySelectorAll('.selected').forEach((sel) => (
