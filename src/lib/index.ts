@@ -43,7 +43,6 @@ export const GregorianConversion = (
     { date, months, yearZero = 2029 }:
     { date: Date, months: Array<Month>, yearZero?: number }
   ) => {
-    console.debug({ date, months, yearZero })
     const [sign, ...more] = months.filter((month: Month, idx: number) => {
       const Δ = offsets({ month, date })
       return (
@@ -56,13 +55,10 @@ export const GregorianConversion = (
       throw new Error('Couldn’t find a sign.')
     }
     if(more.length > 0) {
-      console.error({ date, sign, more })
       throw new Error('Returned too many months.')
     }
 
     const Δ = offsets({ month: sign, date })
-    console.debug({ date, sign, Δ })
-
     const year = date.getFullYear() - yearZero + 1
     return `${year}⁄${sign.symbol}⁄${Δ.day[year >= 0 ? 'start' : 'end']}`
   }

@@ -275,11 +275,10 @@
         &:has(input:checked) {
           filter: saturate(15) hue-rotate(180deg);
         }
-        :global(.selected) {
+        :global(&.selected) {
           filter: saturate(7.5) hue-rotate(270deg);
         }
         :is(
-          &:hover,
           &:has(input:checked),
           :global(.selected)
         ) :global(svg #root) {
