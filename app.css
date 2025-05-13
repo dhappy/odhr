@@ -1,3 +1,32 @@
+@font-face {
+  font-family: Angelic;
+  src:
+    local('Angelic'),
+    url('/fonts/Angelic.woff') format(woff)
+  ;
+}
+@font-face {
+  font-family: '3D LET BRK';
+  src:
+    local('3D LET BRK'),
+    url('/fonts/3D LET BRK.woff') format(woff)
+  ;
+}
+@font-face {
+  font-family: 'Fried Day';
+  src:
+    local('Fried Day'),
+    url('/fonts/Fried Day.woff') format(woff)
+  ;
+}
+@font-face {
+  font-family: 'Permanent Marker';
+  src:
+    local('Permanent Marker'),
+    url('/fonts/Permanent Marker.woff') format(woff)
+  ;
+}
+
 :root {
   color-scheme: light dark;
 }
