@@ -2,7 +2,6 @@
   import { GregorianConversion } from '$lib'
   import { page } from '$app/state'
   import OpenSign from './open.svelte'
-  import * as Hijri from '@denzsakura/hijriscript'
 
   const periods = [0.37, 0.31, 0.29, 0.23]
   let days = $state(7)
@@ -147,13 +146,14 @@
           {#if p < days || d === 0}
             <li><span>
               {#if d === 0}
-                {/*
-                  Hijri.toHijri(() => {
-                  const newDate = new Date(start)
-                  newDate.setDate(newDate.getDate() + p)
-                  return newDate
-                })()
-                */}
+                {GregorianConversion({
+                  date: (() => {
+                    const newDate = new Date(start)
+                    newDate.setDate(newDate.getDate() + p)
+                    return newDate
+                  })(),
+                  months,
+                })}
               {:else}
                 {d * 10}ʜ͋
               {/if}
