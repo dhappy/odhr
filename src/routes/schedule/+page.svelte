@@ -2,14 +2,17 @@
   import { GregorianConversion } from '$lib'
   import { page } from '$app/state'
   import OpenSign from './open.svelte'
+  import * as Hijri from '@denzsakura/hijriscript'
 
   const periods = [0.37, 0.31, 0.29, 0.23]
-  const num = {
-    days: 7,
-    get percents() {
-      return this.days * 100
-    },
-  }
+  let days = $state(7)
+  $effect(() => {
+    const daysParam = page.url.searchParams.get('days')
+    days = (
+      daysParam ? Number(daysParam) : days
+    )
+  })
+
   let selector = $state<HTMLElement>()
 
   let start = $state(new Date())
@@ -135,26 +138,22 @@
   <title>Óð: Scheduling</title>
 </svelte:head>
 
-<form
-  style:--percents={num.percents}
-  onsubmit={submit}
->
+<form onsubmit={submit}>
   <button id="apply">Apply</button>
   <aside>
     <ul id="marks">
-      {#each Array.from({ length: num.days }) as _p, p}
+      {#each Array.from({ length: days + 1 }) as _p, p}
         {#each Array.from({ length: 10 }) as _d, d}
-          {#if p < num.days - 1 || d === 0}
+          {#if p < days || d === 0}
             <li><span>
               {#if d === 0}
-                {GregorianConversion({
-                  date: (() => {
-                    const newDate = new Date(start)
-                    newDate.setDate(newDate.getDate() + p)
-                    return newDate
-                  })(),
-                  months,
-                })}
+                {/*
+                  Hijri.toHijri(() => {
+                  const newDate = new Date(start)
+                  newDate.setDate(newDate.getDate() + p)
+                  return newDate
+                })()
+                */}
               {:else}
                 {d * 10}ʜ͋
               {/if}
@@ -165,7 +164,7 @@
     </ul>
     <ul id="periods">
       {#each periods as period, i}
-        {@const length = Math.floor(num.percents / (period * 100))}
+        {@const length = Math.floor((days * 100) / (period * 100))}
         <li>
           <ol class="slots" style:--slot-height={period + 0.02}>
             {#each Array.from({ length }) as _j, j}
@@ -274,9 +273,15 @@
         }
         &:has(input:checked) {
           filter: saturate(15) hue-rotate(180deg);
+          &:hover {
+            filter: saturate(15) hue-rotate(210deg);
+          }
         }
         :global(&.selected) {
           filter: saturate(7.5) hue-rotate(270deg);
+          &:hover {
+            filter: saturate(15) hue-rotate(290deg);
+          }
         }
         :is(
           &:has(input:checked),

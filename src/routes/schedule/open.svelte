@@ -1,7 +1,3 @@
-<script>
-    import { hasContext } from "svelte";
-
-</script>
 <svg
   width="100%" height="100%"
   version="1.1"
@@ -12,7 +8,7 @@
   <defs><style>
     :root {
       --arc: 33deg;
-      font-family: Angelic;
+      font-family: 'Fried Day';
     }
     path {
       fill: #888;
@@ -60,7 +56,7 @@
     }
     #root:hover text {
       font-family: Angelic;
-      stroke-width: 1.75rem;
+      stroke-width: 1.5rem;
       stroke: darkcyan;
     }
     @media (prefers-reduced-motion) {

@@ -1,6 +1,7 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@denzsakura/hijriscript@^0.0.2": "0.0.2",
     "npm:@deno/vite-plugin@^1.0.4": "1.0.4_vite@6.3.2__picomatch@4.0.2",
     "npm:@eslint/compat@^1.2.5": "1.2.9_eslint@9.25.0",
     "npm:@eslint/js@^9.18.0": "9.25.0",
@@ -18,6 +19,11 @@
     "npm:typescript@5": "5.8.3",
     "npm:vite-plugin-devtools-json@0.1": "0.1.0_vite@6.3.2__picomatch@4.0.2",
     "npm:vite@^6.2.6": "6.3.2_picomatch@4.0.2"
+  },
+  "jsr": {
+    "@denzsakura/hijriscript@0.0.2": {
+      "integrity": "e0665d89ceb0e9d863592c738e1e3fcd5189c8c90ebd260bebdcb5a29037b366"
+    }
   },
   "npm": {
     "@ampproject/remapping@2.3.0": {
@@ -1374,6 +1380,9 @@
     }
   },
   "workspace": {
+    "dependencies": [
+      "jsr:@denzsakura/hijriscript@^0.0.2"
+    ],
     "packageJson": {
       "dependencies": [
         "npm:@deno/vite-plugin@^1.0.4",

@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "@denzsakura/hijriscript": "jsr:@denzsakura/hijriscript@^0.0.2"
+  }
+}
