@@ -17,7 +17,9 @@
           <a href="https://github.com/dhappy/odr/issues/1">Issue</a>
           /
           <a href="schedule/">UI</a>
-          <img class="screen" src="ui/image/scheduling continual.svg" alt="Scheduling Interface"/>
+          <a href="ui/image/scheduling continual.svg">
+            <img class="screen" src="ui/image/scheduling continual.svg" alt="Scheduling Interface"/>
+          </a>
         </li>
         <li>
           Participation:
@@ -34,8 +36,8 @@
     color-scheme: light dark;
   }
 
-  :global(body) {
-    max-width: 75ch;
+  header, main {
+    max-width: 85ch;
     margin: auto;
   }
 
@@ -51,7 +53,7 @@
 
   .screen {
     display: block;
-    max-height: 80dvh;
+    max-height: 100dvh;
     margin-inline-start: 4rem;
   }
 </style>

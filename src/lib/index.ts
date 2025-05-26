@@ -23,43 +23,48 @@ type Delta = {
   day: Bounds
   month: Bounds
 }
+new Date().getDay()
 
-
-export const offsets = ({ month, date }) => {
+export function offsets({ month, date }) {
   const times = ['start', 'end'] as const
   return {
     day: Object.fromEntries(
-      times.map((pos) => [pos, month[pos].getDate() - date.getDate()])
+      times.map((pos) => [pos, dayOfYear(month[pos]) - dayOfYear(date)])
     ) as Bounds,
     month: Object.fromEntries(
       times.map((pos) => [pos, month[pos].getMonth() - date.getMonth()])
     ) as Bounds,
   }
-
 }
 
-export const GregorianConversion = (
-  (
-    { date, months, yearZero = 2029 }:
-    { date: Date, months: Array<Month>, yearZero?: number }
-  ) => {
-    const [sign, ...more] = months.filter((month: Month, idx: number) => {
-      const Δ = offsets({ month, date })
-      return (
-        (Δ.month.start === 0 && Δ.day.start <= 0)
-        || (Δ.month.start === -1 && Δ.day.start >= 0)
-      )
-    })
+export function dayOfYear(date: Date) {
+  const start = new Date(date.getFullYear(), 0, 0)
+  const diff = date.getTime() - start.getTime()
+  const dayLength = 24 * 60 * 60 * 1000
+  return Math.floor(diff / dayLength)
+}
 
-    if(!sign) {
-      throw new Error('Couldn’t find a sign.')
-    }
-    if(more.length > 0) {
-      throw new Error('Returned too many months.')
-    }
+export function GregorianConversion(
+  { date, months, yearZero = 2029 }:
+  { date: Date, months: Array<Month>, yearZero?: number }
+) {
+  const [sign, ...more] = months.filter((month: Month, idx: number) => {
+    const Δ = offsets({ month, date })
+    const member = Δ.day.start >= 0 && Δ.day.end <= 0
+    if(member) console.debug(`Match: ${JSON.stringify({ date, month, Δ }, null, 2)}`)
+    return member
+  })
 
-    const Δ = offsets({ month: sign, date })
-    const year = date.getFullYear() - yearZero + 1
-    return `${year}⁄${sign.symbol}⁄${Δ.day[year >= 0 ? 'start' : 'end']}`
+  if(!sign) {
+    throw new Error('Couldn’t find a sign.')
   }
-)
+  if(more.length > 0) {
+    throw new Error(
+      `Returned too many months: ${JSON.stringify({ date, sign, more }, null, 2)}`
+    )
+  }
+
+  const Δ = offsets({ month: sign, date })
+  const year = date.getFullYear() - yearZero + 1
+  return `${year}⁄${sign.symbol}⁄${Δ.day[year >= 0 ? 'start' : 'end']}`
+}

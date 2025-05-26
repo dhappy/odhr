@@ -5,9 +5,9 @@ const config = {
 	preprocess: vitePreprocess(),
 	kit: {
 		adapter: adapter(),
-	},
-	prerender: {
-		handleHttpError: 'warn',
+		prerender: {
+			handleHttpError: 'warn',
+		},
 	},
 }
 
