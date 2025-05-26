@@ -8,7 +8,7 @@ type RetValue = {
   end: string
 }
 
-export async function load({ fetch }) {
+export async function load({ fetch }: { fetch: (url: string) => Response }) {
   const res = await fetch('/Rotated IAU months.json5')
   const raw = JSON5.parse(await res.text())
   return {

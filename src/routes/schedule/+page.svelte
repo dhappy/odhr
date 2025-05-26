@@ -2,6 +2,8 @@
   import { GregorianConversion } from '$lib'
   import { page } from '$app/state'
   import OpenSign from './open.svelte'
+    import { Hijri } from '$lib/hijri';
+    import { untrack } from 'svelte';
 
   const periods = [0.37, 0.31, 0.29, 0.23]
   let days = $state(7)
@@ -143,21 +145,47 @@
     <ul id="marks">
       {#each Array.from({ length: days + 1 }) as _p, p}
         {#each Array.from({ length: 10 }) as _d, d}
+          {@const date = (() => {
+            const newDate = new Date(start)
+            newDate.setDate(newDate.getDate() + p)
+            let time = 24 * 60 * 60 * d / 10
+            const hours = Math.floor(time / (60 * 60))
+            newDate.setHours(hours)
+            time -= hours * 60 * 60
+            newDate.setMinutes(time / 60)
+            return newDate
+          })()}
+          {@const time = (() => {
+            const parts = Object.fromEntries(
+              Intl.DateTimeFormat(
+                'default',
+                {
+                  hour12: false,
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  year: 'numeric',
+                  month: 'numeric',
+                  day: 'numeric',
+                }
+              )
+              .formatToParts(date)
+              .map(({ type, value }) => [type, value])
+            )
+            console.debug({ parts })
+            return `${parts.year}/${parts.month}/${parts.day}@${parts.hour}:${parts.minute}`
+          })()}
           {#if p < days || d === 0}
-            <li><span>
+            <li>
               {#if d === 0}
-                {GregorianConversion({
-                  date: (() => {
-                    const newDate = new Date(start)
-                    newDate.setDate(newDate.getDate() + p)
-                    return newDate
-                  })(),
-                  months,
-                })}
+                <span title={date.toLocaleDateString(undefined, { dateStyle: 'full' })}>
+                  {Hijri.fromGregorian(date)}
+                </span>
               {:else}
-                {d * 10}ʜ͋
+                <span title={time}>
+                  {d * 10}ʜ͋
+                </span>
               {/if}
-            </span></li>
+            </li>
           {/if}
         {/each}
       {/each}

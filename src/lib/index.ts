@@ -19,13 +19,8 @@ type Bounds = {
   start: number
   end: number
 }
-type Delta = {
-  day: Bounds
-  month: Bounds
-}
-new Date().getDay()
 
-export function offsets({ month, date }) {
+export function offsets({ month, date }: { month: Month, date: Date }) {
   const times = ['start', 'end'] as const
   return {
     day: Object.fromEntries(
@@ -48,7 +43,7 @@ export function GregorianConversion(
   { date, months, yearZero = 2029 }:
   { date: Date, months: Array<Month>, yearZero?: number }
 ) {
-  const [sign, ...more] = months.filter((month: Month, idx: number) => {
+  const [sign, ...more] = months.filter((month: Month) => {
     const Δ = offsets({ month, date })
     const member = Δ.day.start >= 0 && Δ.day.end <= 0
     if(member) console.debug(`Match: ${JSON.stringify({ date, month, Δ }, null, 2)}`)
