@@ -2,10 +2,10 @@
   import { GregorianConversion } from '$lib'
   import { page } from '$app/state'
   import OpenSign from './open.svelte'
-    import { Hijri } from '$lib/hijri';
+  import { addTo, toHijri, toTimestamp } from '$lib/calendar';
     import { untrack } from 'svelte';
 
-  const periods = [0.37, 0.31, 0.29, 0.23]
+  const periods = [0.37, 0.31, 0.29, 0.23] as const
   let days = $state(7)
   $effect(() => {
     const daysParam = page.url.searchParams.get('days')
@@ -22,6 +22,12 @@
     start = (
       startParam ? new Date(startParam) : new Date()
     )
+    untrack(() => {
+      start.setHours(0)
+      start.setMinutes(0)
+      start.setSeconds(0)
+      start.setMilliseconds(0)
+    })
   })
 
   const clearSelection = () => {
@@ -112,9 +118,6 @@
     })
   })
 
-  const { data } = $props()
-  const { months } = data
-
   const submit = (evt: SubmitEvent) => {
     evt.preventDefault()
 
@@ -123,11 +126,8 @@
         (evt.target as HTMLFormElement).elements
       ).map((elem) => {
         if(elem instanceof HTMLInputElement && elem.checked) {
-          const { periodIdx, slotIdx } = elem.dataset
-          return {
-            period: Number(elem.dataset.period),
-            slot: Number(elem.dataset.slotIdx),
-          }
+          const { period, slotIdx: slot } = elem.dataset
+          return { period, slot }
         }
       }).filter(Boolean)
     )
@@ -143,46 +143,25 @@
   <button id="apply">Apply</button>
   <aside>
     <ul id="marks">
-      {#each Array.from({ length: days + 1 }) as _p, p}
-        {#each Array.from({ length: 10 }) as _d, d}
-          {@const date = (() => {
-            const newDate = new Date(start)
-            newDate.setDate(newDate.getDate() + p)
-            let time = 24 * 60 * 60 * d / 10
-            const hours = Math.floor(time / (60 * 60))
-            newDate.setHours(hours)
-            time -= hours * 60 * 60
-            newDate.setMinutes(time / 60)
-            return newDate
-          })()}
-          {@const time = (() => {
-            const parts = Object.fromEntries(
-              Intl.DateTimeFormat(
-                'default',
-                {
-                  hour12: false,
-                  hour: 'numeric',
-                  minute: '2-digit',
-                  year: 'numeric',
-                  month: 'numeric',
-                  day: 'numeric',
-                }
-              )
-              .formatToParts(date)
-              .map(({ type, value }) => [type, value])
-            )
-            console.debug({ parts })
-            return `${parts.year}/${parts.month}/${parts.day}@${parts.hour}:${parts.minute}`
-          })()}
-          {#if p < days || d === 0}
+      {#each Array.from({ length: days + 1 }) as _d, d}
+        {#each Array.from({ length: 10 }) as _s, s}
+          {@const date = addTo(start, d * 100 + s * 10)}
+          {#if d < days || s === 0}
             <li>
-              {#if d === 0}
-                <span title={date.toLocaleDateString(undefined, { dateStyle: 'full' })}>
-                  {Hijri.fromGregorian(date)}
+              {#if s === 0}
+                <span title={
+                  date.toLocaleDateString('default', { dateStyle: 'full' })
+                }>
+                  {toHijri(date)}
                 </span>
               {:else}
-                <span title={time}>
-                  {d * 10}ʜ͋
+                <span title={`${
+                    toTimestamp(date)
+                  }\n${
+                    toTimestamp(date, { day: 'gregorian', time: 'babylonian' })
+                  }`}
+                >
+                  {s * 10}ʜ͋
                 </span>
               {/if}
             </li>
@@ -192,14 +171,31 @@
     </ul>
     <ul id="periods">
       {#each periods as period, i}
-        {@const length = Math.floor((days * 100) / (period * 100))}
+        <!-- There is a 2ʜ͋ overlap of shifts -->
+        {@const length = period * 100 + 2}
         <li>
-          <ol class="slots" style:--slot-height={period + 0.02}>
-            {#each Array.from({ length }) as _j, j}
-              <li>
-                <label for="entry-{i}-{j}"><section>
+          <ol class="slots" style:--slot-height={length}>
+            {#each Array.from({
+              length: Math.ceil(days / period)
+            }) as _j, j}
+              {@const total = period * 100 * j}
+              {@const span = {
+                start: addTo(start, total),
+                end: addTo(start, total + (period + 0.02) * 100),
+              }}
+              {@const label = (
+                `${
+                  toTimestamp(span.start)
+                }–${toTimestamp(span.end, { day: false })}\n${
+                  toTimestamp(span.start, { day: 'gregorian', time: 'babylonian' })
+                }–${
+                  toTimestamp(span.end, { day: false, time: 'babylonian' })
+                }`
+              )}
+              <li title={label}>
+                <label for="entry-{length}-{j}"><section>
                   <input
-                    id="entry-{i}-{j}"
+                    id="entry-{length}-{j}"
                     type="checkbox"
                     value={i * periods.length + j}
                     data-period={period}
@@ -291,7 +287,7 @@
 
     li {
       border-radius: 1rem;
-      height: calc(var(--line) * var(--slot-height) * 100);
+      height: calc(var(--line) * var(--slot-height));
       margin-top: calc(-1 * var(--line) * 3);
       li {
         border: var(--line) solid #5559;
