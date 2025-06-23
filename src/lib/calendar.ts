@@ -57,7 +57,7 @@ export function toPercentage(date: Date) {
   )
 }
 
-export function toPercentClock(date: Date, { day = 'hijri' } = {}) {
+export function toPercentClock(date: Date) {
   return toPercentage(date).toFixed(2).replace('.', 'ʜ͋')
 }
 
