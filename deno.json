@@ -1,6 +1,7 @@
 {
   "imports": {
     "@denzsakura/hijriscript": "jsr:@denzsakura/hijriscript@^0.0.2",
-    "@supabase/functions-js": "jsr:@supabase/functions-js@^2.4.4"
+    "@supabase/functions-js": "jsr:@supabase/functions-js@^2.4.4",
+    "@supabase/supabase-js": "jsr:@supabase/supabase-js@^2.50.0"
   }
 }
